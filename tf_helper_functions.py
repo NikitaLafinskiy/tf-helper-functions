@@ -87,6 +87,18 @@ def plot_metric_curves(history):
   ax2.set(title="Loss values:", xlabel="Epoch", ylabel="Value")
   ax2.legend()
 
+def mase(y_true, y_pred):
+  naive = y_true[:-1]
+  naive_mae = np.absolute(np.average(y_true[1:] - naive))
+  pred_mae = np.absolute(np.average(y_true - y_pred))
+  return pred_mae / naive_mae
+
+def eval_preds(y_true, y_pred):
+  from sklearn.metrics import mae, mse
+
+  df = pd.DataFrame([[mae(y_true, y_pred), mse(y_true, y_pred), mase(y_true, y_pred)]], columns=["MAE", "MSE", "MASE"], index='Score:')
+  return df
+
 def metrics(y_test, y_preds, multiclass=False):
   """
   Arguments: 
